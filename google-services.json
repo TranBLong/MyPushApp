@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "587065223059",
+    "firebase_url": "https://esp32-demo-34519-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "esp32-demo-34519",
+    "storage_bucket": "esp32-demo-34519.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:587065223059:android:b6aff5d3d59fb7eb832a66",
+        "android_client_info": {
+          "package_name": "com.donga.mypushapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdooAykaruzUEvbekd7nB4DkUoyJqsjYQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
