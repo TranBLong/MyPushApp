@@ -6,7 +6,12 @@ const cors = require('cors');
 
 // Khởi tạo Firebase Admin SDK với file khóa bảo mật
 // const serviceAccount = require('./serviceAccountKey.json');
-const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+// const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+// Tự động dùng biến môi trường khi deploy, hoặc dùng file cục bộ khi chạy trên máy
+const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT
+  ? JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
+  : require('./serviceAccountKey.json');
+
 
 initializeApp({
   credential: cert(serviceAccount)
@@ -64,7 +69,7 @@ app.post('/api/iot-data', async (req, res) => {
     let alertMessage = "";
     let alertTitle = "Cảnh báo nguy hiểm từ IoT!";
 
-    // Kiểm tra các điều kiện cảnh báo theo yêu cầu LAB 3
+    // Kiểm tra điều kiện cảnh báo LAB 3
     if (temperature > 40 || temperature < 10) {
         alertMessage = `Nhiệt độ bất thường: ${temperature}°C!`;
     } else if (gasDetected) {
@@ -75,15 +80,13 @@ app.post('/api/iot-data', async (req, res) => {
         alertMessage = "Cảnh báo: Có người lạ xâm nhập!";
     }
 
-    // Nếu có cảnh báo, tiến hành gọi Firebase Admin SDK để đẩy thông báo tới App di động
     if (alertMessage) {
-        // Kiểm tra xem có truyền fcmToken không để tránh lỗi
         if (!fcmToken) {
-            return res.status(400).json({ success: false, error: 'Thiếu tham số fcmToken của thiết bị di động!' });
+            return res.status(400).json({ success: false, error: 'Thiếu tham số fcmToken!' });
         }
 
         const message = {
-            token: fcmToken, // Token lấy từ App di động ở Lab 1
+            token: fcmToken,
             notification: {
                 title: alertTitle,
                 body: alertMessage,
@@ -100,8 +103,7 @@ app.post('/api/iot-data', async (req, res) => {
         }
     }
 
-    // Trường hợp dữ liệu an toàn, không vượt ngưỡng
-    return res.status(200).json({ success: true, message: 'Dữ liệu bình thường, không cần cảnh báo' });
+    return res.status(200).json({ success: true, message: 'Dữ liệu bình thường' });
 });
 
 // Chạy server ở cổng 3000
